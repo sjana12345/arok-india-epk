@@ -1130,9 +1130,10 @@ button { font-family: inherit; cursor: pointer; }
 @media (max-width: 560px) {
   .container { padding: 0 20px; }
   .section { padding: 90px 0; }
-  .hero { padding: 120px 16px 90px; }
+  .hero { padding: 120px 16px 150px; }
   .hero-cta { flex-direction: column; width: 100%; }
   .btn { width: 100%; }
+  .scroll-indicator { bottom: 20px; }
   .vtimeline { padding-left: 36px; }
   .vtimeline-dot { left: -36px; }
   .cards-grid--members { grid-template-columns: 1fr; }
