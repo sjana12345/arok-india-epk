@@ -14,7 +14,6 @@
     initCounters();
     initBackToTop();
     initPrintButton();
-    initStageplotDownload();
     initFooterYear();
   });
 
@@ -200,31 +199,20 @@
   }
 
   /* ------------------------------------------------------------
-     Print / Export Technical Rider as PDF
+     Download Technical Rider & Stage Plot as PDF — isolates the
+     merged #rider section and hands off to the browser's
+     print-to-PDF dialog for a compact, single-doc export
   --------------------------------------------------------------*/
   function initPrintButton() {
     var printBtn = document.getElementById('printRiderBtn');
     if (!printBtn) return;
 
-    printBtn.addEventListener('click', function () {
-      window.print();
-    });
-  }
-
-  /* ------------------------------------------------------------
-     Download Stage Plot as PDF — isolates the #stageplot section
-     and hands off to the browser's print-to-PDF dialog
-  --------------------------------------------------------------*/
-  function initStageplotDownload() {
-    var btn = document.getElementById('downloadStageplotBtn');
-    if (!btn) return;
-
     function clearPrintingState() {
-      document.body.classList.remove('is-printing-stageplot');
+      document.body.classList.remove('is-printing-rider');
     }
 
-    btn.addEventListener('click', function () {
-      document.body.classList.add('is-printing-stageplot');
+    printBtn.addEventListener('click', function () {
+      document.body.classList.add('is-printing-rider');
       window.print();
     });
 

@@ -775,7 +775,11 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    STAGE PLOT
 ============================================================= */
-.stageplot-card { max-width: 980px; margin: 0 auto; }
+.pdf-cover-page { display: none; }
+.pdf-page-header { display: none; }
+.pdf-page-header svg { width: 100%; height: auto; display: block; }
+
+.stageplot-card { max-width: 980px; margin: 0 auto 60px; }
 .stageplot-svg {
   width: 100%;
   height: auto;
@@ -838,14 +842,6 @@ button { font-family: inherit; cursor: pointer; }
 .legend-swatch--drum { background: #1c1c1c; border: 1.5px solid var(--color-primary); border-radius: 50%; }
 .legend-swatch--mic { background: var(--color-primary); border-radius: 50%; }
 .legend-swatch--wedge { background: rgba(107,13,12,0.15); border: 1.5px solid var(--color-primary); }
-
-.stageplot-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  padding-top: 26px;
-  border-top: 1px solid var(--color-border);
-}
 
 /* ============================================================
    TECHNICAL RIDER
@@ -1197,7 +1193,7 @@ button { font-family: inherit; cursor: pointer; }
   }
 
   .site-header, .nav-toggle, .scroll-indicator, .back-to-top,
-  #preloader, .rider-download, .stageplot-actions { display: none !important; }
+  #preloader, .rider-download { display: none !important; }
 
   .hero {
     min-height: auto;
@@ -1213,24 +1209,201 @@ button { font-family: inherit; cursor: pointer; }
 
   a { text-decoration: underline; }
 
-  /* Isolated Stage Plot export — triggered by "Download Stage Plot (PDF)" */
-  body.is-printing-stageplot .site-header,
-  body.is-printing-stageplot .hero,
-  body.is-printing-stageplot .site-footer,
-  body.is-printing-stageplot section:not(#stageplot) {
+  /* ============================================================
+     Compact export — triggered by "Download Technical Rider &
+     Stage Plot (PDF)". Isolates the merged #rider section from
+     the rest of the page and lays it out as a fixed 5-page doc:
+       Page 1 — Cover (logo + titles)
+       Page 2 — Stage Plot SVG
+       Page 3 — Power / Backline / Stage Requirements
+       Page 4 — Monitor Mixes
+       Page 5 — On Stage Setup
+  ============================================================= */
+  body.is-printing-rider .site-header,
+  body.is-printing-rider .hero,
+  body.is-printing-rider .site-footer,
+  body.is-printing-rider section:not(#rider) {
     display: none !important;
   }
 
-  body.is-printing-stageplot #stageplot {
+  body.is-printing-rider #rider {
     padding: 0;
+    page-break-after: avoid;
+    page-break-inside: auto;
+  }
+
+  /* On-screen heading is replaced by the dedicated cover page */
+  body.is-printing-rider .section-heading {
+    display: none !important;
+  }
+
+  /* Page 1 — Cover */
+  body.is-printing-rider .pdf-cover-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 277mm;
+    text-align: center;
+    page-break-after: always;
+  }
+
+  body.is-printing-rider .pdf-cover-page .logo-mark--pdf-cover img {
+    width: 120px;
+    height: 120px;
+  }
+
+  body.is-printing-rider .pdf-cover-page h1 {
+    font-size: 42pt;
+    color: var(--color-white);
+    letter-spacing: 0.05em;
+  }
+
+  body.is-printing-rider .pdf-cover-page h2 {
+    font-size: 20pt;
+    font-weight: 500;
+    color: var(--color-grey);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Page 2 — Stage Plot SVG, centered. Background/border/shadow are
+     stripped so a rendering hiccup can't show up as a black page. */
+  body.is-printing-rider .stageplot-card {
+    max-width: none;
+    min-height: 277mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-before: always;
+    page-break-after: always;
+  }
+
+  /* Page 3 — Power / Backline / Stage Requirements */
+  body.is-printing-rider .pdf-page-header {
+    display: block;
+    width: 100%;
+    margin: 10mm 0 15px;
+    page-break-before: always;
+    page-break-inside: avoid;
     page-break-after: avoid;
   }
 
-  body.is-printing-stageplot .stageplot-card {
-    max-width: none;
+  body.is-printing-rider .rider-summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 0;
+    margin-bottom: 10mm;
+    page-break-after: always;
   }
 
-  body.is-printing-stageplot .section-heading {
-    margin-bottom: 20px;
+  /* Page 4 — Monitor Mixes */
+  body.is-printing-rider .rider-block--monitor-mixes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 277mm;
+    max-height: 277mm;
+    overflow: hidden;
+    margin-top: 0;
+    page-break-before: always;
+    page-break-after: always;
+  }
+
+  /* Compact card sizing so all 5 Monitor Mix cards fit on one page */
+  body.is-printing-rider .rider-block--monitor-mixes .rider-block-title {
+    font-size: 14pt;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .cards-grid--monitor {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .glass-card {
+    padding: 14px 16px;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .monitor-mix-number {
+    margin-bottom: 6px;
+    padding: 2px 10px;
+    font-size: 0.62rem;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .monitor-card h4 {
+    font-size: 9.5pt;
+    margin-bottom: 2px;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .monitor-position {
+    margin-bottom: 4px !important;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .monitor-card p {
+    font-size: 7.5pt;
+    margin: 0 0 3px;
+  }
+
+  body.is-printing-rider .rider-block--monitor-mixes .monitor-desc {
+    margin-top: 6px !important;
+    padding-top: 6px;
+    line-height: 1.3;
+  }
+
+  /* Page 5 — On Stage Setup (last page, no trailing break) */
+  body.is-printing-rider .rider-block--onstage-setup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 277mm;
+    max-height: 277mm;
+    overflow: hidden;
+    margin-top: 0;
+    page-break-before: always;
+  }
+
+  /* Compact card sizing so all 5 On Stage Setup cards fit on one page */
+  body.is-printing-rider .rider-block--onstage-setup .rider-block-title {
+    font-size: 14pt;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .cards-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .glass-card {
+    padding: 14px 16px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .onstage-card h4 {
+    font-size: 9.5pt;
+    margin-bottom: 2px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .rider-list {
+    margin-top: 4px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .rider-list li {
+    font-size: 7.5pt;
+    padding-left: 14px;
+    margin-bottom: 4px;
+  }
+
+  body.is-printing-rider .rider-block--onstage-setup .rider-list li::before {
+    width: 4px;
+    height: 4px;
+    top: 6px;
   }
 }
