@@ -839,6 +839,14 @@ button { font-family: inherit; cursor: pointer; }
 .legend-swatch--mic { background: var(--color-primary); border-radius: 50%; }
 .legend-swatch--wedge { background: rgba(107,13,12,0.15); border: 1.5px solid var(--color-primary); }
 
+.stageplot-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--color-border);
+}
+
 /* ============================================================
    TECHNICAL RIDER
 ============================================================= */
@@ -1189,7 +1197,7 @@ button { font-family: inherit; cursor: pointer; }
   }
 
   .site-header, .nav-toggle, .scroll-indicator, .back-to-top,
-  #preloader, .rider-download { display: none !important; }
+  #preloader, .rider-download, .stageplot-actions { display: none !important; }
 
   .hero {
     min-height: auto;
@@ -1204,4 +1212,25 @@ button { font-family: inherit; cursor: pointer; }
   .reveal, .reveal-item { opacity: 1 !important; transform: none !important; }
 
   a { text-decoration: underline; }
+
+  /* Isolated Stage Plot export — triggered by "Download Stage Plot (PDF)" */
+  body.is-printing-stageplot .site-header,
+  body.is-printing-stageplot .hero,
+  body.is-printing-stageplot .site-footer,
+  body.is-printing-stageplot section:not(#stageplot) {
+    display: none !important;
+  }
+
+  body.is-printing-stageplot #stageplot {
+    padding: 0;
+    page-break-after: avoid;
+  }
+
+  body.is-printing-stageplot .stageplot-card {
+    max-width: none;
+  }
+
+  body.is-printing-stageplot .section-heading {
+    margin-bottom: 20px;
+  }
 }

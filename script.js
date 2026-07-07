@@ -14,6 +14,7 @@
     initCounters();
     initBackToTop();
     initPrintButton();
+    initStageplotDownload();
     initFooterYear();
   });
 
@@ -208,6 +209,26 @@
     printBtn.addEventListener('click', function () {
       window.print();
     });
+  }
+
+  /* ------------------------------------------------------------
+     Download Stage Plot as PDF — isolates the #stageplot section
+     and hands off to the browser's print-to-PDF dialog
+  --------------------------------------------------------------*/
+  function initStageplotDownload() {
+    var btn = document.getElementById('downloadStageplotBtn');
+    if (!btn) return;
+
+    function clearPrintingState() {
+      document.body.classList.remove('is-printing-stageplot');
+    }
+
+    btn.addEventListener('click', function () {
+      document.body.classList.add('is-printing-stageplot');
+      window.print();
+    });
+
+    window.addEventListener('afterprint', clearPrintingState);
   }
 
   /* ------------------------------------------------------------
